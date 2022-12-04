@@ -16,4 +16,6 @@ public interface PlayerService {
     void update(int id, Player updatedPlayer);
 
     void delete(int id);
+
+    PlayerDto transferPlayer(int id, int teamId);
 }

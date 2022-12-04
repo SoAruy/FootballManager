@@ -6,7 +6,9 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.*;
 import ua.solyha.footballmanager.dto.TeamDto;
 import ua.solyha.footballmanager.dto.TeamListDto;
+import ua.solyha.footballmanager.dto.TeamUpdateDto;
 import ua.solyha.footballmanager.entities.Team;
+import static org.springframework.http.MediaType.*;
 import ua.solyha.footballmanager.services.TeamService;
 
 import java.util.List;
@@ -31,9 +33,19 @@ public class TeamController {
         return teamService.findById(id);
     }
 
-    @ResponseStatus(value = HttpStatus.OK)
     @DeleteMapping("/{id}")
-    public void deleteTeam(@PathVariable("id") int id){
+    public String deleteTeam(@PathVariable("id") int id){
         teamService.delete(id);
+        return "Successfully deleted";
+    }
+
+    @PostMapping
+    public TeamDto create(@RequestBody TeamUpdateDto teamUpdateDto){
+        return teamService.save(teamUpdateDto);
+    }
+
+    @PutMapping("/{id}")
+    public TeamDto update(@PathVariable("id") int id, @RequestBody TeamUpdateDto teamUpdateDto){
+        return teamService.update(id, teamUpdateDto);
     }
 }

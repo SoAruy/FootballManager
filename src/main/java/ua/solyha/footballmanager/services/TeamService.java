@@ -2,6 +2,7 @@ package ua.solyha.footballmanager.services;
 
 import ua.solyha.footballmanager.dto.TeamDto;
 import ua.solyha.footballmanager.dto.TeamListDto;
+import ua.solyha.footballmanager.dto.TeamUpdateDto;
 import ua.solyha.footballmanager.entities.Team;
 
 import java.util.List;
@@ -11,9 +12,9 @@ public interface TeamService {
 
     TeamDto findById(int id);
 
-    void save(Team team);
+    TeamDto save(TeamUpdateDto teamUpdateDto);
 
-    void update(int id, Team updatedTeam);
+    TeamDto update(int id, TeamUpdateDto updatedTeam);
 
     void delete(int id);
 }

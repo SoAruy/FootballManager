@@ -12,6 +12,7 @@ import ua.solyha.footballmanager.controllers.TeamController;
 import ua.solyha.footballmanager.dto.PlayerListDto;
 import ua.solyha.footballmanager.dto.TeamDto;
 import ua.solyha.footballmanager.dto.TeamListDto;
+import ua.solyha.footballmanager.dto.TeamUpdateDto;
 import ua.solyha.footballmanager.entities.Player;
 import ua.solyha.footballmanager.entities.Team;
 import ua.solyha.footballmanager.repositories.TeamRepository;
@@ -71,14 +72,20 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Transactional
-    public void save(Team team) {
+    public TeamDto save(TeamUpdateDto teamUpdateDto) {
+        Team team = new Team(teamUpdateDto.getName(), teamUpdateDto.getBalance(), teamUpdateDto.getCommission());
         teamRepository.save(team);
+        return modelMapper.map(team, TeamDto.class);
     }
 
     @Transactional
-    public void update(int id, Team updatedTeam) {
-        updatedTeam.setId(id);
-        teamRepository.save(updatedTeam);
+    public TeamDto update(int id, TeamUpdateDto updatedTeam) {
+        Team team = teamRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        team.setName(updatedTeam.getName());
+        team.setBalance(updatedTeam.getBalance());
+        team.setCommission(updatedTeam.getCommission());
+
+        return findById(id);
     }
 
     @Transactional
