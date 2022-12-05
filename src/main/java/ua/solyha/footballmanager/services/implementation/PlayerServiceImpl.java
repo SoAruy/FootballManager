@@ -9,6 +9,7 @@ import ua.solyha.footballmanager.controllers.PlayerController;
 import ua.solyha.footballmanager.controllers.TeamController;
 import ua.solyha.footballmanager.dto.PlayerDto;
 import ua.solyha.footballmanager.dto.PlayerListDto;
+import ua.solyha.footballmanager.dto.PlayerUpdateDto;
 import ua.solyha.footballmanager.dto.TeamListDto;
 import ua.solyha.footballmanager.entities.Player;
 import ua.solyha.footballmanager.entities.Team;
@@ -54,7 +55,9 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     public PlayerDto findById(int id) {
-        Player player = playerRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        Player player = playerRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("Player with id " + id + "  does not exist")
+        );
         PlayerDto playerDto = modelMapper.map(player, PlayerDto.class);
 
         TeamListDto teamListDto = modelMapper.map(player.getTeam(), TeamListDto.class);
@@ -67,14 +70,30 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Transactional
-    public void save(Player player) {
+    public PlayerDto save(PlayerUpdateDto playerUpdateDto) {
+        Player player = new Player(playerUpdateDto.getName(),
+                playerUpdateDto.getAge(),
+                playerUpdateDto.getExperience(),
+                playerUpdateDto.getSalary(),
+                teamRepository.findById(playerUpdateDto.getTeamId()).orElseThrow(
+                        () -> new IllegalArgumentException("Team with id " + playerUpdateDto.getTeamId() + "  does not exist")));
         playerRepository.save(player);
+        return modelMapper.map(player, PlayerDto.class);
     }
 
     @Transactional
-    public void update(int id, Player updatedPlayer) {
-        updatedPlayer.setId(id);
-        playerRepository.save(updatedPlayer);
+    public PlayerDto update(int id, PlayerUpdateDto updatedPlayer) {
+        Player player = playerRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("Player with id " + id + "  does not exist"));
+
+        player.setName(updatedPlayer.getName());
+        player.setAge(updatedPlayer.getAge());
+        player.setExperience(updatedPlayer.getExperience());
+        player.setSalary(updatedPlayer.getSalary());
+        player.setTeam(teamRepository.findById(updatedPlayer.getTeamId()).orElseThrow(
+                () -> new IllegalArgumentException("Team with id " + updatedPlayer.getTeamId() + "  does not exist")));
+
+        return findById(id);
     }
 
     @Transactional
@@ -91,7 +110,7 @@ public class PlayerServiceImpl implements PlayerService {
         Team oldTeam = player.getTeam();
 
         double price = calculatePrice(player);
-        if(newTeam.getBalance() < price)
+        if (newTeam.getBalance() < price)
             throw new IllegalArgumentException(newTeam.getName() + " doesn't have enough money to buy player: " + player.getName());
         oldTeam.setBalance(oldTeam.getBalance() + price);
         newTeam.setBalance(newTeam.getBalance() - price);

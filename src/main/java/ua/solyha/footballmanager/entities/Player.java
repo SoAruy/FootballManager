@@ -14,7 +14,7 @@ public class Player{
 
     @Size(min = 2, max = 30, message = "Name should be between 2 and 30 characters")
     @Column(name = "name")
-    @NotNull
+    @NotEmpty
     private String name;
 
     @Min(value = 18, message = "Age should be greater than 18")

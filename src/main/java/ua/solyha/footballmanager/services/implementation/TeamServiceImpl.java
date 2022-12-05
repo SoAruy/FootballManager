@@ -80,7 +80,9 @@ public class TeamServiceImpl implements TeamService {
 
     @Transactional
     public TeamDto update(int id, TeamUpdateDto updatedTeam) {
-        Team team = teamRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        Team team = teamRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("Team with id " + id + "  does not exist"));
+
         team.setName(updatedTeam.getName());
         team.setBalance(updatedTeam.getBalance());
         team.setCommission(updatedTeam.getCommission());

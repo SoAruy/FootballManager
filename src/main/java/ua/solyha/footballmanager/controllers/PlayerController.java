@@ -1,11 +1,11 @@
 package ua.solyha.footballmanager.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 
-import ua.solyha.footballmanager.dto.PlayerDto;
-import ua.solyha.footballmanager.dto.PlayerListDto;
+import ua.solyha.footballmanager.dto.*;
 import ua.solyha.footballmanager.services.PlayerService;
 
 import java.util.List;
@@ -39,5 +39,16 @@ public class PlayerController {
     public String delete(@PathVariable("id")int id){
         playerService.delete(id);
         return "Successfully deleted";
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public PlayerDto create(@RequestBody PlayerUpdateDto playerUpdateDto){
+        return playerService.save(playerUpdateDto);
+    }
+
+    @PutMapping("/{id}")
+    public PlayerDto update(@RequestBody PlayerUpdateDto playerUpdateDto, @PathVariable("id") int id){
+        return playerService.update(id, playerUpdateDto);
     }
 }

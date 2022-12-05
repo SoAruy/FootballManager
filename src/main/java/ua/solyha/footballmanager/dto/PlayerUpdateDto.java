@@ -1,27 +1,33 @@
 package ua.solyha.footballmanager.dto;
 
-import org.springframework.hateoas.RepresentationModel;
+import jakarta.validation.constraints.*;
 
-public class PlayerDto extends RepresentationModel<PlayerDto> {
-    private int id;
-
+public class PlayerUpdateDto{
+    @Size(min = 2, max = 30, message = "Name should be between 2 and 30 characters")
+    @NotEmpty
     private String name;
 
+    @Min(value = 18, message = "Age should be greater than 18")
+    @Max(value = 60, message = "Age should be less than 60")
     private int age;
 
+    @Min(value = 0, message = "Experience should be greater than 0")
     private int experience;
 
+    @Min(value = 0, message = "Salary should be greater than 0")
     private double salary;
 
-    public PlayerDto() {
-    }
+    private int teamId;
 
-    public PlayerDto(int id, String name, int age, int experience, double salary) {
-        this.id = id;
+    public PlayerUpdateDto(String name, int age, int experience, double salary, int teamId) {
         this.name = name;
         this.age = age;
         this.experience = experience;
         this.salary = salary;
+        this.teamId = teamId;
+    }
+
+    public PlayerUpdateDto() {
     }
 
     public String getName() {
@@ -56,11 +62,11 @@ public class PlayerDto extends RepresentationModel<PlayerDto> {
         this.salary = salary;
     }
 
-    public int getId() {
-        return id;
+    public int getTeamId() {
+        return teamId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setTeamId(int teamId) {
+        this.teamId = teamId;
     }
 }

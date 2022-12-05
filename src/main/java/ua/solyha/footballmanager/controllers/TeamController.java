@@ -40,6 +40,7 @@ public class TeamController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public TeamDto create(@RequestBody TeamUpdateDto teamUpdateDto){
         return teamService.save(teamUpdateDto);
     }

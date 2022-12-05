@@ -17,6 +17,13 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException e){
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getConstraintViolations().toString());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getConstraintViolations().toString());
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+
+
 }
